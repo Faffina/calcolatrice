@@ -1,6 +1,7 @@
 MEMORY {
-    flash (rx): ORIGIN = 0x08000000, LENGTH = 128K
-    ram(rwx): ORIGIN = 0x20000000, LENGTH = 16K
+    flash (rx)  : ORIGIN = 0x08000000, LENGTH = 512K
+    ram   (rwx) : ORIGIN = 0x20000000, LENGTH = 128K
+    ccm   (rwx) : ORIGIN = 0x10000000, LENGTH = 64K
 }
 
 _stack_start = ORIGIN(ram) + LENGTH(ram);
@@ -28,27 +29,6 @@ SECTIONS
 
     _data_start_flash = LOADADDR(.data);
 
-    .preinit_array :
-    {
-        PROVIDE_HIDDEN(__preinit_array_start = .);
-        KEEP(*(.preinit_array*))
-        PROVIDE_HIDDEN(__preinit_array_end = .);
-    } > flash
-
-    .init_array :
-    {
-        PROVIDE_HIDDEN(__init_array_start = .);
-        KEEP(*(SORT(.init_array*)))
-        PROVIDE_HIDDEN(__init_array_end = .);
-    } > flash
-
-    .fini_array :
-    {
-        PROVIDE_HIDDEN(__fini_array_start = .);
-        KEEP(*(SORT(.fini_array*)))
-        PROVIDE_HIDDEN(__fini_array_end = .);
-    } > flash
-
     .bss : 
     {
         _bss_start = .;
@@ -57,6 +37,11 @@ SECTIONS
         _bss_end = .;
     } > ram
 
+    .ccmram :
+    {
+        *(.ccmram*)
+    } > ccm
+    
     . = ALIGN(8);
     _end = .;
 }

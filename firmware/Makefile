@@ -2,9 +2,9 @@ CC=arm-none-eabi-gcc
 AS=arm-none-eabi-as
 OBJCOPY=arm-none-eabi-objcopy
 
-CFLAGS=-mcpu=cortex-m0 -mthumb -O0 -nostdlib -ffreestanding -Iinclude -MMD -MP -g -Og
-ASFLAGS=-mcpu=cortex-m0 -mthumb 
-LDFLAGS=-T linker.ld -nostdlib -Wl,--gc-sections -mcpu=cortex-m0 -mthumb
+CFLAGS=-mcpu=cortex-m4 -mthumb -O0 -nostdlib -ffreestanding -Iinclude -MMD -MP -g -Og
+ASFLAGS=-mcpu=cortex-m4 -mthumb 
+LDFLAGS=-T linker.ld -nostdlib -Wl,--gc-sections -mcpu=cortex-m4 -mthumb
 
 c_source := $(shell find src -type f -name "*.c")
 s_source := $(shell find src -type f -name "*.s")
@@ -44,7 +44,7 @@ bin/%.o: src/%.s
 
 .PHONY: flash
 flash: bin/firmware.bin
-	st-flash write bin/firmware.bin 0x08000000 
+	st-flash write bin/firmware.bin 0x08000000
 .PHONY: clean
 clean:
 	rm -rf bin/*

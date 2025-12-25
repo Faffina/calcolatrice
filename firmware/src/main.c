@@ -1,25 +1,28 @@
-#include "gpio.h"
 #include <stdint.h>
 
-void delay(uint32_t times) {
-  for (uint32_t i = 0; i < times; i++) {
-    __asm__ volatile("nop" ::: "memory");
-  }
+#define RCC_AHB1ENR   (*(volatile uint32_t*)0x40023830)
+#define GPIOA_MODER   (*(volatile uint32_t*)0x40020000)
+#define GPIOA_ODR     (*(volatile uint32_t*)0x40020014)
+
+static void delay(volatile uint32_t count)
+{
+    while (count--) {
+        __asm volatile ("nop");
+    }
 }
 
-#define RCC_BASE 0x40021000UL
-#define RCC_AHBENR (*(volatile uint32_t *)(RCC_BASE + 0x14U))
+int main(void)
+{
+    RCC_AHB1ENR |= (1 << 0);
 
-void main() {
-    RCC_AHBENR |= (1U << 17);
-    gpio_init_pin(A1, GPIO_OUTPUT, GPIO_PUSH_PULL, GPIO_HIGH_SPEED, GPIO_NO_PULL_UP_DOWN);
-    gpio_init_pin(A2, GPIO_OUTPUT, GPIO_PUSH_PULL, GPIO_HIGH_SPEED, GPIO_NO_PULL_UP_DOWN);
-    gpio_init_pin(A3, GPIO_OUTPUT, GPIO_PUSH_PULL, GPIO_HIGH_SPEED, GPIO_NO_PULL_UP_DOWN);
+    GPIOA_MODER &= ~((3 << (6 * 2)) | (3 << (7 * 2)));
+    GPIOA_MODER |=  ((1 << (6 * 2)) | (1 << (7 * 2)));
 
-    while (1) {
-        gpio_toggle(A1);
-        gpio_toggle(A2);
-        gpio_toggle(A3);
-        delay(100000);
+    while (1)
+    {
+        GPIOA_ODR ^= (1 << 6);
+        GPIOA_ODR ^= (1 << 7);
+
+        delay(500000);
     }
 }
