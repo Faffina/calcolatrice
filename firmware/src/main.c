@@ -17,12 +17,15 @@ int main(void)
 
     GPIOA_MODER &= ~((3 << (6 * 2)) | (3 << (7 * 2)));
     GPIOA_MODER |=  ((1 << (6 * 2)) | (1 << (7 * 2)));
+    float faffa = 0.0f;
 
     while (1)
     {
         GPIOA_ODR ^= (1 << 6);
         GPIOA_ODR ^= (1 << 7);
-
-        delay(500000);
+        delay(faffa * 1000);
+        faffa += 0.9f;
+        if (faffa > 500) 
+            faffa = 0.0f;
     }
 }

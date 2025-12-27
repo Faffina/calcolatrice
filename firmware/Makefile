@@ -2,7 +2,7 @@ CC=arm-none-eabi-gcc
 AS=arm-none-eabi-as
 OBJCOPY=arm-none-eabi-objcopy
 
-CFLAGS=-mcpu=cortex-m4 -mthumb -O0 -nostdlib -ffreestanding -Iinclude -MMD -MP -g -Og
+CFLAGS=-mcpu=cortex-m4 -mthumb -O0 -nostdlib -ffreestanding -Iinclude -MMD -MP -g -Og -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 ASFLAGS=-mcpu=cortex-m4 -mthumb 
 LDFLAGS=-T linker.ld -nostdlib -Wl,--gc-sections -mcpu=cortex-m4 -mthumb
 
