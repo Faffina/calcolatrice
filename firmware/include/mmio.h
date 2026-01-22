@@ -87,10 +87,3 @@ typedef int32_t isize;
 #define MM_TIME_03             0x40000400
 #define MM_TIME_02             0x40000000
 
-#define clear_n_bits(reg,bits,index) reg &= ~(((1 << bits) - 1) << (index * bits) 
-
-#define set_n_bits (reg,mask,bits,index) do { \
-    clear_n_bits(reg, bits, index);           \
-    reg |= (mask << (index * bits));          \
-} while(0)
-

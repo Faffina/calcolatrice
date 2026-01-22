@@ -1,31 +1,27 @@
 #include <stdint.h>
+#include "gpio.h"
+#include "mmio.h"
+#include <stdbool.h>
 
-#define RCC_AHB1ENR   (*(volatile uint32_t*)0x40023830)
-#define GPIOA_MODER   (*(volatile uint32_t*)0x40020000)
-#define GPIOA_ODR     (*(volatile uint32_t*)0x40020014)
+#define RCC_AHB1ENR   (*(volatile uint32_t*) 0x40023830)
 
-static void delay(volatile uint32_t count)
-{
-    while (count--) {
-        __asm volatile ("nop");
+void delay(u32 time) {
+    for (; time > 0; time--) {
+        __asm__ volatile ("nop");
     }
 }
 
-int main(void)
-{
-    RCC_AHB1ENR |= (1 << 0);
+int main(void) {
+    RCC_AHB1ENR |= 1;
+    gpio_pin led1 = gpio_get_pin(GPIO_A, 7);
+    gpio_pin led2 = gpio_get_pin(GPIO_A, 6);
+    gpio_init_pin(led1, GPIO_MODE_OUTPUT, GPIO_SPEED_VERY_HIGH, GPIO_NO_PULL, GPIO_AF0);
+    gpio_init_pin(led2, GPIO_MODE_OUTPUT, GPIO_SPEED_VERY_HIGH, GPIO_NO_PULL, GPIO_AF0);
+    gpio_toggle(led1);
 
-    GPIOA_MODER &= ~((3 << (6 * 2)) | (3 << (7 * 2)));
-    GPIOA_MODER |=  ((1 << (6 * 2)) | (1 << (7 * 2)));
-    float faffa = 0.0f;
-
-    while (1)
-    {
-        GPIOA_ODR ^= (1 << 6);
-        GPIOA_ODR ^= (1 << 7);
-        delay(faffa * 1000);
-        faffa += 0.9f;
-        if (faffa > 500) 
-            faffa = 0.0f;
+    while(1) {
+        gpio_toggle(led1);
+        gpio_toggle(led2);
+        delay(1000000);
     }
 }

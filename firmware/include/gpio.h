@@ -8,7 +8,7 @@ typedef struct {
     u32 ospeedr;
     u32 pupdr;
     u32 idr;
-    u32 ord;
+    u32 odr;
     u32 bsrr;
     u32 lckr;
     u32 afrl;
@@ -64,9 +64,9 @@ typedef enum {
 } gpio_speed;
 
 typedef enum {
-    gpio_no_pull = 0,
-    gpio_pull_up = 1,
-    gpio_pull_donw = 2,
+    GPIO_NO_PULL = 0,
+    GPIO_PULL_UP = 1,
+    GPIO_PULL_DONW = 2,
 } gpio_pull_up_down_state;
 
 typedef enum {
