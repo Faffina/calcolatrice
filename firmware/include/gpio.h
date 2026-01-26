@@ -98,7 +98,6 @@ void gpio_init_pin(
         gpio_pull_up_down_state pull_state, 
         gpio_alternate_functions function
 );
-void gpio_write(gpio_pin pin, bool high);
 void gpio_set(gpio_pin pin);
 void gpio_clear(gpio_pin pin);
 void gpio_toggle(gpio_pin pin);

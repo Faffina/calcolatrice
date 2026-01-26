@@ -9,7 +9,46 @@
 .extern _data_start_flash
 .extern _bss_start
 .extern _bss_end
+.extern init
 .extern main
+
+.section .text.start, "a", %progbits
+.thumb_func 
+.global start 
+start:
+    ldr r0, =_stack_start
+    mov sp, r0
+    ldr r0, =_data_start
+    ldr r1, =_data_end
+    ldr r2, =_data_start_flash
+data_loop:
+    cmp r0, r1
+    bhs data_copy_done
+    ldr r3, [r2]
+    str r3, [r0]
+    adds r0, #4
+    adds r2, #4
+    b data_loop
+data_copy_done:
+    ldr r0, =_bss_start
+    ldr r1, =_bss_end
+    movs r2, #0
+bss_loop:
+    cmp r0, r1
+    bhs bss_init_done
+    str r2, [r0]
+    adds r0, #4
+    b bss_loop
+bss_init_done:
+    bl init
+    bl main
+loop:
+    b loop
+
+.section .text.default_handle,"ax",%progbits
+.global default_handle
+default_handle:
+    b default_handle
 
 .section .vectors, "a", %progbits
 .align 2
@@ -113,40 +152,6 @@ g_Vectors:
   .word CRYP_IRQHandler
   .word HASH_RNG_IRQHandler
   .word FPU_IRQHandler
-
-.section .text.start, "a", %progbits
-.thumb_func 
-.global start 
-start:
-    ldr r0, =_data_start
-    ldr r1, =_data_end
-    ldr r2, =_data_start_flash
-data_loop:
-    cmp r0, r1
-    bhs data_copy_done
-    ldr r3, [r2]
-    str r3, [r0]
-    adds r0, #4
-    adds r2, #4
-    b data_loop
-data_copy_done:
-    ldr r0, =_bss_start
-    ldr r1, =_bss_end
-    movs r2, #0
-bss_loop:
-    cmp r0, r1
-    bhs bss_init_done
-    str r2, [r0]
-    adds r0, #4
-    b bss_loop
-bss_init_done:
-    bl main
-loop:
-    b loop
-
-.global default_handle
-default_handle:
-    b default_handle
 
 .weak NMI_Handler
 .thumb_set NMI_Handler, default_handle

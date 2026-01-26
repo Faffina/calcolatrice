@@ -1,7 +1,8 @@
 #include "gpio.h"
 
+#define RCC_AHB1ENR   (*(volatile uint32_t*) 0x40023830)
 void gpio_init(gpio_port_name name) {
-    // todo
+    RCC_AHB1ENR |= (name + 1);
 }
 void gpio_init_pin(
         gpio_pin pin, 
@@ -30,21 +31,16 @@ void gpio_init_pin(
         port->afrh |= function << (number * 4);
     }
 }
-void gpio_write(gpio_pin pin, bool high) {
-    if (high) 
-        gpio_set(pin);
-    else
-        gpio_clear(pin);
-}
+
 void gpio_set(gpio_pin pin) {
     volatile gpio_port_t* port = gpio_ports[pin.port_name];
     u8 number = pin.number;
-    port->bsrr |= 1 << number;
+    port->bsrr = 1U << number;
 }
 void gpio_clear(gpio_pin pin) {
     volatile gpio_port_t* port = gpio_ports[pin.port_name];
     u8 number = pin.number;
-    port->bsrr |= 1 << (number + 16);
+    port->bsrr = 1U << (number + 16);
 }
 void gpio_toggle(gpio_pin pin) {
     volatile gpio_port_t* port = gpio_ports[pin.port_name];

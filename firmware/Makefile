@@ -45,6 +45,7 @@ bin/%.o: src/%.s
 .PHONY: flash
 flash: bin/firmware.bin
 	st-flash write bin/firmware.bin 0x08000000
+	st-flash reset
 .PHONY: clean
 clean:
 	rm -rf bin/*

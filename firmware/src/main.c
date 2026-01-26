@@ -1,27 +1,17 @@
 #include <stdint.h>
 #include "gpio.h"
-#include "mmio.h"
 #include <stdbool.h>
-
+#include "mmio.h"
+#include "defult_vector.h"
 #define RCC_AHB1ENR   (*(volatile uint32_t*) 0x40023830)
 
-void delay(u32 time) {
-    for (; time > 0; time--) {
-        __asm__ volatile ("nop");
-    }
-}
-
 int main(void) {
-    RCC_AHB1ENR |= 1;
-    gpio_pin led1 = gpio_get_pin(GPIO_A, 7);
-    gpio_pin led2 = gpio_get_pin(GPIO_A, 6);
-    gpio_init_pin(led1, GPIO_MODE_OUTPUT, GPIO_SPEED_VERY_HIGH, GPIO_NO_PULL, GPIO_AF0);
-    gpio_init_pin(led2, GPIO_MODE_OUTPUT, GPIO_SPEED_VERY_HIGH, GPIO_NO_PULL, GPIO_AF0);
-    gpio_toggle(led1);
-
+    volatile u32* rcc_cr = (volatile u32*) MM_RCC;
+    show_code_once(0, 2);
+    *rcc_cr |= 1 << 16;
     while(1) {
-        gpio_toggle(led1);
-        gpio_toggle(led2);
-        delay(1000000);
+        if((*rcc_cr & (1 << 17)) > 0) {
+            show_code_once(0, 1);
+        }
     }
 }
