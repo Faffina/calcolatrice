@@ -9,7 +9,7 @@
 .extern _data_start_flash
 .extern _bss_start
 .extern _bss_end
-.extern init
+.extern systemInit
 .extern main
 
 .section .text.start, "a", %progbits
@@ -40,7 +40,7 @@ bss_loop:
     adds r0, #4
     b bss_loop
 bss_init_done:
-    bl init
+    bl systemInit
     bl main
 loop:
     b loop

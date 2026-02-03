@@ -1,0 +1,26 @@
+int -> pc05
+so  -> pb14
+si  -> pb15
+scs -> pb12
+sck -> pb13
+ca_r -> pd07
+rs -> pd13
+wr -> pd05
+rd -> pd04
+db00 -> pd14
+db01 -> pd15
+db02 -> pd00
+db03 -> pd01
+db04 -> pe07
+db05 -> pe08
+db06 -> pe09
+db07 -> pe10
+db08 -> pe11
+db09 -> pe12
+db10 -> pe13
+db11 -> pe14
+db12 -> pe15
+db13 -> pd08
+db14 -> pd09
+db15 -> pd10
+
