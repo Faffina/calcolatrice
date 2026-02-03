@@ -9,6 +9,8 @@
 .extern _data_start_flash
 .extern _bss_start
 .extern _bss_end
+.extern __init_array_start
+.extern __init_array_end
 .extern systemInit
 .extern main
 
@@ -41,6 +43,16 @@ bss_loop:
     b bss_loop
 bss_init_done:
     bl systemInit
+    ldr r0, =__init_array_start
+    ldr r1, =__init_array_end
+ctor_loop:
+    cmp r0, r1
+    bhs ctor_done
+    ldr r2, [r0]
+    adds r0, #4
+    blx r2
+    b ctor_loop
+ctor_done:
     bl main
 loop:
     b loop

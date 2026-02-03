@@ -1,15 +1,20 @@
 CC=arm-none-eabi-gcc
+CXX = arm-none-eabi-g++
 AS=arm-none-eabi-as
 OBJCOPY=arm-none-eabi-objcopy
 
-CFLAGS=-mcpu=cortex-m4 -mthumb -nostdlib -ffreestanding -Iinclude -MMD -MP -O0 -g3 -mfpu=fpv4-sp-d16 -mfloat-abi=hard
-ASFLAGS=-mcpu=cortex-m4 -mthumb 
-LDFLAGS=-T linker.ld -nostdlib -Wl,--gc-sections -mcpu=cortex-m4 -mthumb
+CFLAGS   = -mcpu=cortex-m4 -mthumb -nostdlib -ffreestanding -Iinclude -MMD -MP -mfpu=fpv4-sp-d16 -mfloat-abi=hard -O0 -g3
+CXXFLAGS = -mcpu=cortex-m4 -mthumb -ffreestanding -fno-exceptions -fno-rtti -fno-use-cxa-atexit -Iinclude -MMD -MP -mfpu=fpv4-sp-d16 -mfloat-abi=hard -O0 -g3
+ASFLAGS  = -mcpu=cortex-m4 -mthumb 
+LDFLAGS  = -T linker.ld -nostdlib -Wl,--gc-sections -mcpu=cortex-m4 -mthumb
 
 c_source := $(shell find src -type f -name "*.c")
+cpp_source := $(shell find src -type f -name "*.cpp")
 s_source := $(shell find src -type f -name "*.s")
-source := $(s_source) $(c_source)
-object := $(patsubst src/%,bin/%,$(source:.c=.o))
+source := $(s_source) $(c_source) $(cpp_source)
+
+object := $(patsubst src/%,bin/%,$(source:.cpp=.o))
+object := $(patsubst src/%,bin/%,$(object:.c=.o))
 object := $(object:.s=.o)
 dependecy := $(object:.o=.d)
 
@@ -25,7 +30,7 @@ bin/firmware.bin: bin/firmware.elf
 bin/firmware.elf: $(object)
 	@mkdir -p bin
 	@printf "linking         %-40s" "$<"
-	@$(CC) $(object) $(LDFLAGS) -o bin/firmware.elf
+	@$(CXX) $(object) $(LDFLAGS) -o bin/firmware.elf
 	@printf "done\n"
 
 bin/%.o: src/%.c
@@ -34,12 +39,20 @@ bin/%.o: src/%.c
 	@$(CC) $(CFLAGS) -c $< -o $@
 	@printf "done\n"
 
+bin/%.o: src/%.cpp
+	@printf "compiling C++   %-40s" "$<"
+	@mkdir -p $(dir $@)
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
+	@printf "done\n"
+
 bin/%.o: src/%.s
+	echo $(source) $(object) $(dependecy)
 	@printf "assembling      %-40s" "$<"
 	@mkdir -p $(dir $@)
 	@$(AS) $(ASFLAGS) -c $< -o $@
 	@printf "done\n"
 	
+
 -include $(dependecy)
 
 .PHONY: flash

@@ -26,6 +26,37 @@ SECTIONS
         . = ALIGN(4);
     } > flash
 
+    .preinit_array :
+    {
+        . = ALIGN(4);
+        __preinit_array_start = .;
+        KEEP(*(.preinit_array*))
+        __preinit_array_end = .;
+    } > flash
+
+    .init_array :
+    {
+        . = ALIGN(4);
+        __init_array_start = .;
+        KEEP(*(.init_array*))
+        __init_array_end = .;
+    } > flash
+
+    .fini_array :
+    {
+        . = ALIGN(4);
+        __fini_array_start = .;
+        KEEP(*(.fini_array*))
+        __fini_array_end = .;
+    } > flash
+
+    .ARM.exidx :
+    {
+        __exidx_start = .;
+        *(.ARM.exidx*)
+        __exidx_end = .;
+    } > flash
+
     .data : 
     {
         . = ALIGN(4);

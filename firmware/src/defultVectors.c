@@ -1,4 +1,3 @@
-#pragma once
 #include "gpio.h"
 void delay(u32 time) {
     for (; time > 0; time--) {
