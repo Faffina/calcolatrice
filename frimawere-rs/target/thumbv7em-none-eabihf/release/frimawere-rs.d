@@ -1,0 +1,1 @@
+/home/faffa/Documents/calcolatrice/frimawere-rs/target/thumbv7em-none-eabihf/release/frimawere-rs: /home/faffa/Documents/calcolatrice/frimawere-rs/build.rs /home/faffa/Documents/calcolatrice/frimawere-rs/linker.ld /home/faffa/Documents/calcolatrice/frimawere-rs/src/main.rs /home/faffa/Documents/calcolatrice/frimawere-rs/startup.s

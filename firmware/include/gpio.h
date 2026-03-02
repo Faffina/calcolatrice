@@ -1,5 +1,5 @@
 #pragma once
-#include "mmio.h"
+#include "mmio.hxx"
 #include <stdbool.h>
 
 typedef struct {

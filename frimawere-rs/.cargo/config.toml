@@ -1,0 +1,9 @@
+[build]
+target = "thumbv7em-none-eabihf" # Cortex-M4F (FPU support)
+
+[target.thumbv7em-none-eabihf]
+rustflags = [
+  "-C", "link-arg=start.o",   # Use your custom linker script
+  "-C", "link-arg=-Tlinker.ld",   # Use your custom linker script
+  "-C", "relocation-model=static",
+]

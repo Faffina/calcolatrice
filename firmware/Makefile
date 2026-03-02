@@ -46,7 +46,6 @@ bin/%.o: src/%.cpp
 	@printf "done\n"
 
 bin/%.o: src/%.s
-	echo $(source) $(object) $(dependecy)
 	@printf "assembling      %-40s" "$<"
 	@mkdir -p $(dir $@)
 	@$(AS) $(ASFLAGS) -c $< -o $@
